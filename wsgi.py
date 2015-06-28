@@ -174,9 +174,8 @@ class Hello(object):
          
         </head>
         <body>
-        <a href="threeDgear">題目一2齒輪組合</a><br />
------------------------------------------------------------
-         <br /><a href="threeDgear1"> 題目二4齒輪組合</a><br />
+        <br /><a href="threeDgear">40223241題目一2齒輪組合</a><br />
+
         </body>
 
 
