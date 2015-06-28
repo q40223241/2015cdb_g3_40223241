@@ -78,7 +78,7 @@ class Hello(object):
     # 有 self 的方法為類別中的成員方法, Python 程式透過此一 self 在各成員方法間傳遞物件內容
     def index_orig(self, toprint="Hello World!"):
         return toprint
-    #@+node:2015.20150628165129.1: *3* qq
+    #@+node:2015.20150628172749.1: *3* qq
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
     def qq(self, N=20, N1=20,M=5, P=15):
@@ -107,6 +107,46 @@ class Hello(object):
                 齒數1='''+str(N)+'''<br />
                 齒數2='''+str(N1)+'''<br />
                 <br /><a href="mygeartest2">繪製齒輪</a><br />
+                <head>
+                </html>
+            '''
+            return outstring
+
+
+
+
+
+
+
+    #@+node:2015.20150628165129.1: *3* qqq
+    @cherrypy.expose
+    # N 為齒數, M 為模數, P 為壓力角
+    def qqq(self, N=20, N1=20,M=5, P=15):
+
+         N = int(str(N))
+         N1 = int(str(N1))
+
+
+     
+         if N < 15:
+            return "齒數1 低於15請重新輸入" + self.threeDgear()
+         elif N > 80:
+            return "齒數1 超過80請重新輸入 " + self.threeDgear()
+         elif N1 < 15:
+            return "齒數2 低於15請重新輸入 " + self.threeDgear()
+         elif N1 > 80:
+            return "齒數2 超過80請重新輸入 " + self.threeDgear()
+         else:
+
+            cherrypy.session['N'] = N
+            cherrypy.session['N1'] = N1
+            outstring = '''
+                <!DOCTYPE html> 
+                <html>
+                <head>
+                齒數1='''+str(N)+'''<br />
+                齒數2='''+str(N1)+'''<br />
+                <br /><a href="mygeartest3">繪製齒輪</a><br />
                 <head>
                 </html>
             '''
@@ -191,6 +231,35 @@ class Hello(object):
     <body onload="brython()">
         
     <form method=POST action=qq>
+
+    齒數1:<input type=text name=N><br />
+    齒數2:<input type=text name=N1><br />
+
+    <input type=submit value=開始繪製>
+    </form>
+    </body>
+    </html>
+    '''
+
+        return outstring
+    #@+node:2015.20150628172927.1: *3* threeDgear1
+    @cherrypy.expose
+    # N 為齒數, M 為模數, P 為壓力角
+    def threeDgear1(self, N=20, N1=20,M=5, P=15):
+        outstring = '''
+    <!DOCTYPE html> 
+    <html>
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <!-- 載入 brython.js -->
+    <script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"></script>
+    <script src="/static/Cango2D.js" type="text/javascript"></script>
+    <script src="/static/gearUtils-04.js" type="text/javascript"></script>
+    </head>
+    <!-- 啟動 brython() -->
+    <body onload="brython()">
+        
+    <form method=POST action=qqq>
 
     齒數1:<input type=text name=N><br />
     齒數2:<input type=text name=N1><br />
@@ -550,6 +619,113 @@ class Hello(object):
     # put it back
     ctx.translate(-(1000),-(1000+rp_g1+rp_g2))
     spur.Spur(ctx).Gear(1000,1000+rp_g1+rp_g2,rp_g2,n_g2, pa, "black")
+    ctx.restore()
+
+
+    </script>
+    <canvas id="plotarea" width="8000" height="8000"></canvas>
+    </body>
+    </html>
+    '''
+
+        return outstring
+    #@+node:2015.20150628172905.1: *3* mygeartest3
+    @cherrypy.expose
+    # N 為齒數, M 為模數, P 為壓力角
+    def mygeartest3(self, N=20,N1=20, M=5, P=15):
+        outstring = '''
+    <!DOCTYPE html> 
+    <html>
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <!-- 載入 brython.js -->
+    <script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"></script>
+    <script src="/static/Cango2D.js" type="text/javascript"></script>
+    <script src="/static/gearUtils-04.js" type="text/javascript"></script>
+    </head>
+    <!-- 啟動 brython() -->
+    <body onload="brython()">
+
+    <!-- 以下為 canvas 畫圖程式 -->
+    <script type="text/python">
+    # 從 browser 導入 document
+    from browser import document
+    from math import *
+    # 請注意, 這裡導入位於 Lib/site-packages 目錄下的 spur.py 檔案
+    import spur
+
+    # 準備在 id="plotarea" 的 canvas 中繪圖
+    canvas = document["plotarea"]
+    ctx = canvas.getContext("2d")
+
+    # 以下利用 spur.py 程式進行繪圖, 接下來的協同設計運算必須要配合使用者的需求進行設計運算與繪圖
+    # 其中並將工作分配給其他組員建立類似 spur.py 的相關零件繪圖模組
+    # midx, midy 為齒輪圓心座標, rp 為節圓半徑, n 為齒數, pa 為壓力角, color 為線的顏色
+    # Gear(midx, midy, rp, n=20, pa=20, color="black"):
+    # 模數決定齒的尺寸大小, 囓合齒輪組必須有相同的模數與壓力角
+    # 壓力角 pa 單位為角度
+    pa = 20
+    # m 為模數
+    m = 20
+    # 第1齒輪齒數
+    n_g1 = '''+str(N)+'''
+    # 第2齒輪齒數[
+    n_g2 = '''+str(N1)+'''
+    # 第3齒輪齒數[
+    n_g3 = '''+str(N)+'''
+    # 第4齒輪齒數[
+    n_g4 = '''+str(N1)+'''
+
+
+    # 計算三齒輪的節圓半徑
+    rp_g1 = m*n_g1/2
+    rp_g2 = m*n_g2/2
+    rp_g3 = m*n_g3/2
+    rp_g4 = m*n_g4/2
+
+    # 將第1齒輪順時鐘轉 90 度
+    # 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
+    ctx.save()
+    # translate to the origin of second gear
+    ctx.translate(1000,1000)
+    # rotate to engage
+    ctx.rotate(pi)
+    # put it back
+    ctx.translate(-1000,-1000)
+    spur.Spur(ctx).Gear(1000,1000,rp_g1,n_g1, pa, "blue")
+    ctx.restore()
+
+    # 將第2齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
+    ctx.save()
+    # translate to the origin of second gear
+    ctx.translate(1000,1000+rp_g1+rp_g2)
+    # rotate to engage
+    ctx.rotate(-pi/n_g2)
+    # put it back
+    ctx.translate(-(1000),-(1000+rp_g1+rp_g2))
+    spur.Spur(ctx).Gear(1000,1000+rp_g1+rp_g2,rp_g2,n_g2, pa, "black")
+    ctx.restore()
+
+    # 將第3齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
+    ctx.save()
+    # translate to the origin of second gear
+    ctx.translate(1000+rp_g2+rp_g3,1000+rp_g1+rp_g2)
+    # rotate to engage
+    ctx.rotate((pi/n_g3*0.5)*(n_g2%4)-pi/n_g3*(n_g3/2))
+    # put it back
+    ctx.translate(-(1000+rp_g2),-(1000+rp_g1+rp_g2))
+    spur.Spur(ctx).Gear(1000+rp_g2,1000+rp_g1+rp_g2,rp_g3,n_g3, pa, "red")
+    ctx.restore()
+
+    # 將第4齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
+    ctx.save()
+    # translate to the origin of second gear
+    ctx.translate(1000+rp_g2+rp_g3,1000+rp_g1+rp_g2+rp_g3+rp_g4)
+    # rotate to engage
+    ctx.rotate(-(pi/n_g4*0.5)*((n_g3)%4)+pi/n_g4*((n_g4+1)%2)+pi/n_g4*0.5*((n_g4)%2))
+    # put it back
+    ctx.translate(-(1000+rp_g2),-(1000+rp_g1+rp_g2+rp_g3+rp_g4))
+    spur.Spur(ctx).Gear(1000+rp_g2,1000+rp_g1+rp_g2+rp_g3+rp_g4,rp_g4,n_g4, pa, "black")
     ctx.restore()
 
 
