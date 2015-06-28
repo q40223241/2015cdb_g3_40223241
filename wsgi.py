@@ -98,8 +98,8 @@ class Hello(object):
             return "齒數2 超過80請重新輸入 " + self.threeDgear()
          else:
 
-            cherrypy.session['N'] = N
-            cherrypy.session['N1'] = N1
+            cherrypy.session['g1'] = N
+            cherrypy.session['g2'] = N1
             outstring = '''
                 <!DOCTYPE html> 
                 <html>
@@ -129,23 +129,25 @@ class Hello(object):
 
      
          if N < 15:
-            return "齒數1 低於15請重新輸入" + self.threeDgear()
+            return "齒數1 低於15請重新輸入" + self.threeDgear1()
          elif N > 80:
-            return "齒數1 超過80請重新輸入 " + self.threeDgear()
+            return "齒數1 超過80請重新輸入 " + self.threeDgear1()
          elif N1 < 15:
-            return "齒數2 低於15請重新輸入 " + self.threeDgear()
+            return "齒數2 低於15請重新輸入 " + self.threeDgear1()
          elif N1 > 80:
-            return "齒數2 超過80請重新輸入 " + self.threeDgear()
+            return "齒數2 超過80請重新輸入 " + self.threeDgear1()
          else:
 
-            cherrypy.session['N'] = N
-            cherrypy.session['N1'] = N1
+            cherrypy.session['g1'] = N
+            cherrypy.session['g2'] = N1
             outstring = '''
                 <!DOCTYPE html> 
                 <html>
                 <head>
                 齒數1='''+str(N)+'''<br />
                 齒數2='''+str(N1)+'''<br />
+                齒數3='''+str(N)+'''<br />
+                齒數4='''+str(N1)+'''<br />
                 <br /><a href="mygeartest3">繪製齒輪</a><br />
                 <head>
                 </html>
@@ -232,8 +234,8 @@ class Hello(object):
         
     <form method=POST action=qq>
 
-    齒數1:<input type=text name=N><br />
-    齒數2:<input type=text name=N1><br />
+    齒數1:<input type=text name=N value='''+str(N)+''' ><br />
+    齒數2:<input type=text name=N1 value='''+str(N1)+''' ><br />
 
     <input type=submit value=開始繪製>
     </form>
@@ -246,6 +248,7 @@ class Hello(object):
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
     def threeDgear1(self, N=20, N1=20,M=5, P=15):
+        
         outstring = '''
     <!DOCTYPE html> 
     <html>
@@ -261,8 +264,8 @@ class Hello(object):
         
     <form method=POST action=qqq>
 
-    齒數1:<input type=text name=N><br />
-    齒數2:<input type=text name=N1><br />
+    齒數1:<input type=text name=N value='''+str(N)+''' ><br />
+    齒數2:<input type=text name=N1 value='''+str(N1)+''' ><br />
 
     <input type=submit value=開始繪製>
     </form>
@@ -554,6 +557,8 @@ class Hello(object):
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
     def mygeartest2(self, N=20,N1=20, M=5, P=15):
+        g1= int(cherrypy.session.get('g1'))
+        g2= int(cherrypy.session.get('g2'))
         outstring = '''
     <!DOCTYPE html> 
     <html>
@@ -589,9 +594,9 @@ class Hello(object):
     # m 為模數
     m = 20
     # 第1齒輪齒數
-    n_g1 = '''+str(N)+'''
+    n_g1 = '''+str(g1)+'''
     # 第2齒輪齒數[
-    n_g2 = '''+str(N1)+'''
+    n_g2 = '''+str(g2)+'''
 
 
     # 計算三齒輪的節圓半徑
@@ -633,6 +638,8 @@ class Hello(object):
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
     def mygeartest3(self, N=20,N1=20, M=5, P=15):
+        g1= int(cherrypy.session.get('g1'))
+        g2= int(cherrypy.session.get('g2'))
         outstring = '''
     <!DOCTYPE html> 
     <html>
@@ -668,13 +675,13 @@ class Hello(object):
     # m 為模數
     m = 20
     # 第1齒輪齒數
-    n_g1 = '''+str(N)+'''
+    n_g1 = '''+str(g1)+'''
     # 第2齒輪齒數[
-    n_g2 = '''+str(N1)+'''
+    n_g2 = '''+str(g2)+'''
     # 第3齒輪齒數[
-    n_g3 = '''+str(N)+'''
+    n_g3 = '''+str(g1)+'''
     # 第4齒輪齒數[
-    n_g4 = '''+str(N1)+'''
+    n_g4 = '''+str(g2)+'''
 
 
     # 計算三齒輪的節圓半徑
